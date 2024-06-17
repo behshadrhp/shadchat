@@ -23,3 +23,7 @@ media/*
 
 # static files
 staticfiles/*
+
+# log & tmp
+tmp
+*.log

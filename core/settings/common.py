@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from django.contrib import messages
 
 # Build paths inside the project like this: BASE_DIR / "subdir".
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -129,6 +130,61 @@ CACHES = {
 
 # TimeOut system
 TIMEOUT = 300
+
+# Message Tag
+MESSAGE_TAGS = {
+    messages.DEBUG: "debug",
+    messages.INFO: "info",
+    messages.SUCCESS: "success",
+    messages.WARNING: "warning",
+    messages.ERROR: "danger",
+}
+
+# create directory
+LOG_DIR = os.path.join(BASE_DIR, "tmp", "logs")
+
+# Check if the log directory exists, and create it if not
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file_debug": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(LOG_DIR, "debug.log"),
+        },
+        "file_info": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(LOG_DIR, "info.log"),
+        },
+        "file_warning": {
+            "level": "WARNING",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(LOG_DIR, "warning.log"),
+        },
+        "file_error": {
+            "level": "ERROR",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(LOG_DIR, "error.log"),
+        },
+        "file_critical": {
+            "level": "CRITICAL",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(LOG_DIR, "critical.log"),
+        },
+    },
+    "loggers": {
+        "": {
+            "handlers": ["file_debug", "file_info", "file_warning", "file_error", "file_critical"],
+            "level": "INFO",
+            "propagate": True,
+        },
+    },
+}
 
 # Jazzmin Settings Configuration
 JAZZMIN_SETTINGS = {
