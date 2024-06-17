@@ -3,7 +3,7 @@ from django.views import View
 from django.shortcuts import redirect
 
 
-class Logout(View):
+class LogoutView(View):
     """
     This class is for Logout user.
     """

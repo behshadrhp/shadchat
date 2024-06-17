@@ -94,6 +94,9 @@ MEDIA_ROOT = BASE_DIR / "media"
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# set user model
+AUTH_USER_MODEL = "account.User"
+
 # Axes Configuration Settings
 AUTHENTICATION_BACKENDS = [
     # AxesStandaloneBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
@@ -108,7 +111,7 @@ SESSION_EXPIRE_SECONDS = 3600  # 1 hour
 SESSION_COOKIE_AGE = 3600 # 1 hour
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
 SESSION_TIMEOUT_REDIRECT = "/"
-# AXES_LOCKOUT_TEMPLATE = "account_locked.html" --> if need -> enable
+AXES_LOCKOUT_TEMPLATE = "account/account_locked.html"
 
 # Session setting configuration
 SESSION_EXPIRE_SECONDS = 604800  # 1 week -> Expire
@@ -124,18 +127,8 @@ CACHES = {
     }
 }
 
-# email settings configuration
-EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
-EMAIL_HOST = os.environ.get("EMAIL_HOST")
-EMAIL_PORT = os.environ.get("EMAIL_PORT")
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
-
 # TimeOut system
 TIMEOUT = 300
-
 
 # Jazzmin Settings Configuration
 JAZZMIN_SETTINGS = {

@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 import debug_toolbar
 from dotenv import load_dotenv
 
-from account.views import Logout
+from account.views import LogoutView
 
 # Loading environment variable"s
 load_dotenv()
@@ -20,7 +20,7 @@ else:
 
 urlpatterns = [
     # customize logout admin panel
-    path(f"{ADMIN_DIRECTORY}/logout/", Logout.as_view(), name="logout-admin"),
+    path(f"{ADMIN_DIRECTORY}/logout/", LogoutView.as_view(), name="logout-admin"),
     # admin panel
     path(f"{ADMIN_DIRECTORY}/", admin.site.urls),
     # account app dir

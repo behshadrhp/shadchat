@@ -9,4 +9,6 @@ gunicorn
 Pillow
 pip-chill
 python-dotenv
+py3dns
+validate_email_address
 whitenoise
