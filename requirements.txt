@@ -1,0 +1,12 @@
+django
+django-session-timeout
+django-debug-toolbar
+django-jazzmin
+django-axes
+dj-database-url
+psycopg2-binary 
+gunicorn
+Pillow
+pip-chill
+python-dotenv
+whitenoise
