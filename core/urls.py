@@ -27,6 +27,8 @@ urlpatterns = [
     path("account/", include("account.urls")),
     # home app dir
     path("", include("home.urls")),
+    # chat app dir
+    path("chat/", include("chat.urls")),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
