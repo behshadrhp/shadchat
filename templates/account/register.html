@@ -1,0 +1,24 @@
+{% extends 'main/main.html' %}
+
+
+{% block title %}Register{% endblock title %}
+
+
+{% block content %}
+    <h1>Register</h1>
+
+    <form action="" method="post">
+        {% csrf_token %}
+
+        <h6>Username</h6>
+        <input type="text" name="username" id="useranme"><br><br>
+        <h6>Email</h6>
+        <input type="email" name="email" id="email"><br><br>
+        <h6>Password</h6>
+        <input type="password" name="password1" id="password1"><br><br>
+        <h6>Confrim Password</h6>
+        <input type="password" name="password2" id="password2"><br><br>
+        <p>I have account click <a href="{% url 'login' %}">here</a>.</p>
+        <input type="submit" value="Submit">
+    </form>
+{% endblock content %}
