@@ -28,14 +28,13 @@
             
             {% if request.user.is_authenticated %}
                 <div class="navbar-entry-buttons" style="margin-left: 1%;">
-                    <a class="btn btn-outline-dark mx-3 font-vazir" href="#">Exit</a>
+                    <a class="btn btn-outline-dark mx-3 font-vazir" href="{% url 'logout' %}">Exit</a>
                 </div>
             {% else %}
                 <div class="navbar-entry-buttons" style="margin-left: 1%;">
-                    <a class="btn btn-outline-dark mx-3 font-vazir" href="#">Signin</a>
+                    <a class="btn btn-outline-dark mx-3 font-vazir" href="{% url 'login' %}">Login</a>
                 </div>
             {% endif %}                
         </div>
     </div>
 </nav>
-
