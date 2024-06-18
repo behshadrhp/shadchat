@@ -56,7 +56,7 @@ class Profile(models.Model):
     
     # initial information
     avatar = models.ImageField(
-        default="default/avatar.jpg", 
+        default="default/avatar.png", 
         upload_to=path.user_profile_avatar_upload_path, 
         validators=[fields.validate_file_size_volume, fields.validate_image_file_extension]
     )
@@ -117,8 +117,8 @@ class Settings(models.Model):
 
     class Meta:
         ordering = ["-updated"]
-        verbose_name = "Account Settings"
-        verbose_name_plural = "Account Settings"
+        verbose_name = "Settings"
+        verbose_name_plural = "Settings"
         indexes = [
             models.Index(fields=["user",]),
         ]
