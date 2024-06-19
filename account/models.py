@@ -117,7 +117,7 @@ class Settings(models.Model):
 
     class Meta:
         ordering = ["-updated"]
-        verbose_name = "Settings"
+        verbose_name = "Account Settings"
         verbose_name_plural = "Settings"
         indexes = [
             models.Index(fields=["user",]),
