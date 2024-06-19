@@ -22,14 +22,3 @@ class AboutUSView(View):
         
         context = {}
         return render(request, "home/about_us.html", context)
-
-
-class ContactUSView(View):
-    """
-    Rendering ContactUS page.
-    """
-    
-    def get(self, request):
-        
-        context = {}
-        return render(request, "home/contact_us.html", context)
