@@ -19,6 +19,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Internal App
     "account",
+    "support",
+    "home",
+    "chat",
     # External App
     "debug_toolbar",
     "axes",

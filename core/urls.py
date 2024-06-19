@@ -29,6 +29,8 @@ urlpatterns = [
     path("", include("home.urls")),
     # chat app dir
     path("chat/", include("chat.urls")),
+    # support app dir
+    path("support/", include("support.urls")),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
