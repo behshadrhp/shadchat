@@ -1,24 +1,66 @@
 {% extends 'main/main.html' %}
 
-
 {% block title %}Register{% endblock title %}
 
+{% block style %}
+<style>
+    .register-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 65vh;
+    }
+    .register-form {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 2rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+    }
+    .register-form h1 {
+        margin-bottom: 1.5rem;
+        font-size: 2rem;
+    }
+    .register-form .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .register-form .btn-primary {
+        width: 100%;
+    }
+    .register-form .login-link {
+        display: block;
+        margin-top: 1rem;
+        text-align: center;
+    }
+</style>
+{% endblock style %}
 
 {% block content %}
-    <h1>Register</h1>
-
-    <form action="" method="post">
-        {% csrf_token %}
-
-        <h6>Username</h6>
-        <input type="text" name="username" id="useranme"><br><br>
-        <h6>Email</h6>
-        <input type="email" name="email" id="email"><br><br>
-        <h6>Password</h6>
-        <input type="password" name="password1" id="password1"><br><br>
-        <h6>Confrim Password</h6>
-        <input type="password" name="password2" id="password2"><br><br>
-        <p>I have account click <a href="{% url 'login' %}">here</a>.</p>
-        <input type="submit" value="Submit">
-    </form>
+<div class="container register-section">
+    <div class="register-form">
+        <h1>Register</h1>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" name="username" id="username" placeholder="Enter your username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" name="email" id="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="password1">Password</label>
+                <input type="password" class="form-control" name="password1" id="password1" placeholder="Enter your password" required>
+            </div>
+            <div class="form-group">
+                <label for="password2">Confirm Password</label>
+                <input type="password" class="form-control" name="password2" id="password2" placeholder="Confirm your password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <p class="login-link">I have an account, click <a href="{% url 'login' %}">here</a>.</p>
+        </form>
+    </div>
+</div>
 {% endblock content %}

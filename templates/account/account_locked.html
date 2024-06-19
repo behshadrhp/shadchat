@@ -1,11 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Locked</title>
-</head>
-<body>
-    <H1>Your Account is Locked.</H1>
-</body>
-</html>
+{% extends 'main/main.html' %}
+
+{% block title %}Account Locked{% endblock title %}
+
+{% block style %}
+<style>
+    .locked-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 70vh;
+        text-align: center;
+    }
+    .locked-message {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 2rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .locked-message h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .locked-message p {
+        font-size: 1.2rem;
+    }
+</style>
+{% endblock style %}
+
+{% block content %}
+<div class="container locked-section">
+    <div class="locked-message">
+        <h1>Your Account is Locked</h1>
+        <p>If you believe this is a mistake, please contact support.</p>
+    </div>
+</div>
+{% endblock content %}
