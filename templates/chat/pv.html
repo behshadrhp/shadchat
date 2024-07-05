@@ -105,5 +105,22 @@
             window.history.back();
         }
     </script>
+    <script>
+        const url = "ws://127.0.0.1:8000/websocket/";
+        const chat_websocket = new WebSocket(url);
+        const send_btn = document.getElementById("send-message-button");
+        const message_text = document.getElementById("the-message-to-send");
+
+        send_btn.addEventListener(
+            "click",
+            function() {
+                chat_websocket.send("{'type': 'message', 'message': 'Hello World'}");
+            }
+        );
+
+        chat_websocket.onmessage = function(event){
+            console.log(event);
+        };
+    </script>
 </body>
 </html>

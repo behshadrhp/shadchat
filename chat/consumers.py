@@ -2,4 +2,9 @@ from channels.generic.websocket import WebsocketConsumer
 
 
 class ChatConsumer(WebsocketConsumer):
-    pass
+    
+    def connect(self):
+        self.accept()
+        
+    def receive(self, text_data):
+        print(text_data)
