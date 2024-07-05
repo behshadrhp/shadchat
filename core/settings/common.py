@@ -8,6 +8,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Application definition
 INSTALLED_APPS = [
+    # websocket
+    "channels",
+    "daphne",
     # Admin Panel
     "jazzmin",
     # Main App
@@ -63,6 +66,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "core.wsgi.application"
+ASGI_APPLICATION = "core.asgi.application"
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
