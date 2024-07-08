@@ -135,6 +135,13 @@ CACHES = {
     }
 }
 
+# Channels Layer
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
+
 # TimeOut system
 TIMEOUT = 300
 
