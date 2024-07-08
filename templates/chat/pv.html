@@ -106,7 +106,7 @@
         }
     </script>
     <script>
-        const url = "ws://127.0.0.1:8000/websocket/";
+        const url = "ws://127.0.0.1:8000/websocket/behshadrhp/";
         const chat_websocket = new WebSocket(url);
         const send_btn = document.getElementById("send-message-button");
         const message_text = document.getElementById("the-message-to-send");
@@ -119,7 +119,7 @@
         );
 
         chat_websocket.onmessage = function(event){
-            console.log(event);
+            console.log(event.data);
         };
     </script>
 </body>
