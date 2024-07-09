@@ -5,5 +5,5 @@ from chat import views
 
 urlpatterns = [
     # chat on pv page
-    path("pv/", views.PVChatView.as_view(), name="pv-chat"),
+    path("pv/<str:username>/", views.PVChatView.as_view(), name="chat-pv"),
 ]
