@@ -63,7 +63,7 @@ class Profile(models.Model):
     first_name = models.CharField(max_length=15, null=True, blank=True, validators=[fields.name_regex])
     last_name = models.CharField(max_length=15, null=True, blank=True, validators=[fields.name_regex])
     gender = models.CharField(max_length=10, null=True, blank=True, choices=GenderType.choices, default=GenderType.OTHER)  # choice gender
-    bio = models.TextField(null=True, blank=True)
+    bio = models.TextField(max_length=50, null=True, blank=True)
 
     # create - update Time
     created = models.DateTimeField(auto_now_add=True)

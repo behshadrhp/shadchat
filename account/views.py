@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.views import View
 
+from account.models import Profile
+
 User = get_user_model()
 
 
@@ -16,7 +18,7 @@ class LoginView(View):
         if not request.user.is_authenticated:
             context = {}
             return render(request, "account/login.html", context)
-        return redirect("home")
+        return redirect("dashboard")
         
     def post(self, request):
         
@@ -29,11 +31,11 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
                 messages.success(request, "Login is successful")
-                return redirect("home")
+                return redirect("dashboard")
             else:
                 messages.error(request, "Your username or password is invalid")
                 return redirect("login")
-        return redirect("home")
+        return redirect("dashboard")
 
 
 class RegisterView(View):
@@ -47,7 +49,7 @@ class RegisterView(View):
             context = {}
             return render(request, "account/register.html")
         else:
-            return redirect("home")
+            return redirect("dashboard")
         
     def post(self, request):
         
@@ -78,10 +80,10 @@ class RegisterView(View):
             if authenticated_user:
                 login(request, authenticated_user)
                 messages.success(request, "Login successful")
-                return redirect("home")
+                return redirect("dashboard")
             
         else:
-            return redirect("home")
+            return redirect("dashboard")
 
 
 class LogoutView(View):
@@ -96,3 +98,18 @@ class LogoutView(View):
     def post(self, request):
         logout(request)
         return redirect("home")
+
+
+class DashboardView(View):
+    """
+    This class is for rendering dashboard page.
+    """
+    
+    def get(self, request):
+        if request.user.is_authenticated:
+            users = Profile.objects.select_related("user").all()
+            
+            context = {"users": users}
+            return render(request, "account/dashboard.html", context)
+        else:
+            return redirect("login")
