@@ -74,8 +74,8 @@ class ProfileAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         # Permission Just for SuperUser
-        return False
-
+        return request.user.is_superuser
+    
     def get_readonly_fields(self, request, obj=None):
         # Only superusers can edit the specified fields
         if obj.user == request.user or request.user.is_superuser:
@@ -110,8 +110,8 @@ class SettingsAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         # Permission Just for SuperUser
-        return False
-
+        return request.user.is_superuser
+    
     def get_readonly_fields(self, request, obj=None):
         # Only superusers can edit the specified fields
         if obj.user == request.user or request.user.is_superuser:
