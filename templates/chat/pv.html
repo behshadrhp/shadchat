@@ -13,6 +13,8 @@
             padding: 0;
             height: 100vh;
             background-color: #e0f7fa;
+            display: flex;
+            flex-direction: column;
         }
         .avatar {
             width: 40px;
@@ -24,7 +26,7 @@
             background-color: #ffffff;
             border-radius: 10px;
             padding: 10px;
-            margin: 10px;
+            margin: 10px 0;
             max-width: 70%;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
@@ -53,47 +55,38 @@
         }
         .input-group {
             position: relative;
+            display: flex;
+            align-items: center;
+            padding: 10px;
         }
         .input-group textarea {
+            flex: 1;
             border-radius: 5px;
             resize: none;
             padding: 10px;
+            border: 1px solid #ccc;
         }
         .input-group-append {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
+            margin-left: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="flex flex-col h-full">
-        <header class="bg-blue-500 text-white p-4 flex items-center justify-between">
-            <button onclick="goBack()" class="bg-blue-700 px-3 py-1 rounded-md">Back</button>
-            <div class="flex items-center">
-                <img src="{% static 'img/logo.png' %}" class="avatar" alt="Avatar">
-                <p class="font-bold">Person's Name</p>
-            </div>
-        </header>
-        <div class="flex-1 overflow-y-auto p-4 space-y-4">
-            <div class="message-box to self-end">
-                <p class="font-bold">Me: the user's name</p>
-                <p class="message-content">Message from you</p>
-                <p class="message-time">2024-01-30 10:55:02</p>
-            </div>
-            <div class="message-box from">
-                <p class="font-bold">Other Person's Name</p>
-                <p class="message-content">Message from the other</p>
-                <p class="message-time">2024-01-30 10:55:02</p>
-            </div>
+    <header class="bg-blue-500 text-white p-4 flex items-center justify-between">
+        <button onclick="goBack()" class="bg-blue-700 px-3 py-1 rounded-md">Back</button>
+        <div class="flex items-center">
+            <img src="{% static 'img/logo.png' %}" class="avatar" alt="Avatar">
+            <p class="font-bold">Person's Name</p>
         </div>
-        <div class="p-4 border-t">
-            <div class="input-group">
-                <textarea class="w-full h-24 border border-gray-300 p-2" id="the-message-to-send" placeholder="Type your message here"></textarea>
-                <div class="input-group-append">
-                    <button id="send-message-button">Send</button>
-                </div>
+    </header>
+    <div id="messages-area" class="flex-1 overflow-y-auto p-4 space-y-4">
+        <!-- Messages will be dynamically added here -->
+    </div>
+    <div class="p-4 border-t">
+        <div class="input-group">
+            <textarea class="w-full h-24 border border-gray-300 p-2" id="the-message-to-send" placeholder="Type your message here"></textarea>
+            <div class="input-group-append">
+                <button id="send-message-button">Send</button>
             </div>
         </div>
     </div>
@@ -104,22 +97,78 @@
         function goBack() {
             window.history.back();
         }
-    </script>
-    <script>
+
         const url = "ws://127.0.0.1:8000/websocket/behshadrhp/";
         const chat_websocket = new WebSocket(url);
         const send_btn = document.getElementById("send-message-button");
         const message_text = document.getElementById("the-message-to-send");
+        const messages_area = document.getElementById("messages-area");
 
-        send_btn.addEventListener(
-            "click",
-            function() {
-                chat_websocket.send("{'type': 'message', 'message': 'Hello World'}");
+        function isRtl(text) {
+            const ltrChars = /[A-Za-z0-9]/;
+            const rtlChars = /[\u0600-\u06FF\u0750-\u077F]/;
+            const ltr = text.split('').filter(char => ltrChars.test(char)).length;
+            const rtl = text.split('').filter(char => rtlChars.test(char)).length;
+            return rtl > ltr;
+        }
+
+        function setTextDirection(textarea) {
+            if (isRtl(textarea.value)) {
+                textarea.style.direction = 'rtl';
+            } else {
+                textarea.style.direction = 'ltr';
             }
-        );
+        }
 
-        chat_websocket.onmessage = function(event){
-            console.log(event.data);
+        message_text.addEventListener('input', function() {
+            setTextDirection(this);
+        });
+
+        function appendMessage(content, isFromMe) {
+            const now = new Date();
+            const formattedTime = now.toISOString().replace('T', ' ').substring(0, 19);
+            const messageBoxClass = isFromMe ? 'to self-end' : 'from';
+            const readStatus = isFromMe ? '<span class="read-status">✔</span>' : '';
+
+            messages_area.insertAdjacentHTML(
+                "beforeend",
+                `<div class="message-box ${messageBoxClass}">
+                    <p class="font-bold">${isFromMe ? 'Me: the user\'s name' : 'Other Person\'s Name'}</p>
+                    <p class="message-content">${content}</p>
+                    <p class="message-time">${formattedTime} ${readStatus}</p>
+                </div>`
+            );
+
+            if (isFromMe) {
+                setTimeout(() => {
+                    const lastMessage = messages_area.querySelectorAll('.message-box.to .message-time .read-status').length - 1;
+                    messages_area.querySelectorAll('.message-box.to .message-time .read-status')[lastMessage].innerHTML = '✔✔';
+                }, 2000); // Simulate read receipt after 2 seconds
+            }
+        }
+
+        send_btn.addEventListener("click", function() {
+            const message = message_text.value.trim();
+            if (message) {
+                chat_websocket.send(JSON.stringify({ 'type': 'new_message', 'message': message }));
+                appendMessage(message, true);
+                message_text.value = "";
+                messages_area.scrollTop = messages_area.scrollHeight;
+            }
+        });
+
+        message_text.addEventListener("keydown", function(event) {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                send_btn.click();
+            }
+        });
+
+        chat_websocket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            if (data.type === 'new_message') {
+                appendMessage(data.message, false);
+            }
         };
     </script>
 </body>
