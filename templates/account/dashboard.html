@@ -86,7 +86,7 @@
                 <span class="text-gray-600">@{{ user.username }}</span>
                 <span class="text-gray-600">{{ user.user_profile.bio }}</span>
             </div>
-            <a href="#" class="edit-button">Edit Profile</a>
+            <a href="{% url 'profile' %}" class="edit-button">Edit Profile</a>
         </div>
     </div>
 

@@ -4,6 +4,8 @@ from account import views
 
 
 urlpatterns = [
+    # profile
+    path("profile/", views.ProfileView.as_view(), name="profile"),
     # dashboard
     path("dashboard/", views.DashboardView.as_view(), name="dashboard"),
     # login path

@@ -4,6 +4,8 @@ from django.contrib import messages
 from django.views import View
 
 from account.models import Profile
+from account.forms import ProfileForm 
+from utils.account.choices import GenderType
 
 User = get_user_model()
 
@@ -111,5 +113,37 @@ class DashboardView(View):
             
             context = {"users": users}
             return render(request, "account/dashboard.html", context)
+        else:
+            return redirect("login")
+
+
+class ProfileView(View):
+    """
+    This class is for rendering Profile page.
+    """
+    
+    def get(self, request):
+        if request.user.is_authenticated:
+            user_profile = Profile.objects.select_related("user").get(user=request.user)
+            form = ProfileForm(instance=user_profile)
+            
+            gender_choices = GenderType.choices
+            context = {"user": request.user, "form": form, "gender_choices": gender_choices}
+            return render(request, "account/profile.html", context)
+        else:
+            return redirect("login")
+    
+    def post(self, request):
+        if request.user.is_authenticated:
+            user_profile = Profile.objects.select_related("user").get(user=request.user)
+            form = ProfileForm(request.POST, request.FILES, instance=user_profile)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Profile Updated")
+                return redirect("dashboard")
+            
+            gender_choices = GenderType.choices
+            context = {"user": request.user, "form": form, "gender_choices": gender_choices}
+            return render(request, "account/profile.html", context)
         else:
             return redirect("login")
