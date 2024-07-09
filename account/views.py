@@ -107,7 +107,7 @@ class DashboardView(View):
     
     def get(self, request):
         if request.user.is_authenticated:
-            users = Profile.objects.select_related("user").all()
+            users = Profile.objects.select_related("user").exclude(user=request.user).all()
             
             context = {"users": users}
             return render(request, "account/dashboard.html", context)
