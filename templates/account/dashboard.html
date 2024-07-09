@@ -113,7 +113,7 @@
                     <span class="font-bold">{{ user.first_name }} {{ user.last_name }}</span>
                     <span>@{{ user.user }}</span>
                 </div>
-                <a href="#" class="chat-button">Chat</a>
+                <a href="{% url 'chat-pv' user.user %}" class="chat-button">Chat</a>
             </li>
             {% endfor %}
         </ul>
