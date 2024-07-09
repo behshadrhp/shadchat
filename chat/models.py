@@ -29,3 +29,6 @@ class Message(models.Model):
         indexes = [
             models.Index(fields=["user",]),
         ]
+    
+    def __str__(self):
+        return self.user
