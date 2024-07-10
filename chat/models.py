@@ -32,3 +32,30 @@ class Message(models.Model):
     
     def __str__(self):
         return self.user.username
+
+
+class UserChannel(models.Model):
+    """
+    This class is for create User Channel.
+    """
+    
+    # primary key field and user relationship 
+    id = models.UUIDField(default=uuid4, unique=True, primary_key=True, editable=False, db_index=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_channel")
+    
+    # initial information
+    channel = models.TextField()
+    
+    # create - update Time
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = "User Channel"
+        verbose_name_plural = "User Channels"
+        indexes = [
+            models.Index(fields=["user",]),
+        ]
+    
+    def __str__(self):
+        return self.user.username
