@@ -93,13 +93,7 @@
     <!-- Total Messages Sent -->
     <div class="card">
         <div class="card-header">Messages Sent</div>
-        <div class="text-3xl font-bold">8,910</div>
-    </div>
-
-    <!-- Total Users -->
-    <div class="card">
-        <div class="card-header">Total Users</div>
-        <div class="text-3xl font-bold">1,234</div>
+        <div class="text-3xl font-bold">{{request.user.user_message.count}}</div>
     </div>
 
     <!-- Users List -->
