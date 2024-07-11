@@ -1,0 +1,161 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with {{ person.username }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8fafc;
+        }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .message-box {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            max-width: 70%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .message-box.from {
+            background-color: #e2f7fc;
+            align-self: flex-start;
+        }
+        .message-box.to {
+            background-color: #007bff;
+            color: #ffffff;
+            align-self: flex-end;
+        }
+        .message-time {
+            font-size: 12px;
+            color: #9e9e9e;
+        }
+        .read-status {
+            color: #ffffff;
+            font-size: 12px;
+        }
+        .read-status.unread {
+            color: #9e9e9e;
+        }
+    </style>
+</head>
+<body class="flex flex-col">
+    <header class="bg-blue-600 text-white p-4 flex items-center justify-between shadow-md">
+        <button onclick="goBack()" class="bg-blue-800 px-3 py-1 rounded-md hover:bg-blue-900">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
+        <div class="flex items-center mx-auto">
+            <img src="{{ person.user_profile.avatar.url }}" class="avatar" alt="Avatar">
+            <p class="font-bold ml-2">{{person.user_profile.first_name}} {{person.user_profile.last_name}}</p>
+        </div>
+    </header>
+    <div id="messages-area" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-100">
+        {% for message in messages %}
+        <div class="message-box {% if message.user == request.user %}to{% else %}from{% endif %}">
+            <p class="message-content">{{ message.message }}</p>
+            <p class="message-time">
+                {{ message.created|date:"Y-m-d H:i:s" }}
+                {% if message.user == request.user %}
+                    <span class="read-status {% if message.has_seen_been %}read{% else %}unread{% endif %}">
+                        {% if message.has_seen_been %}✔✔{% else %}✔{% endif %}
+                    </span>
+                {% endif %}
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="p-4 border-t bg-white flex items-center">
+        <textarea id="the-message-to-send" class="flex-1 border border-gray-300 p-2 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-600" placeholder="Type your message here..."></textarea>
+        <button id="send-message-button" class="ml-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">send</button>
+    </div>
+    
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+
+        const person_username = "{{person.username}}";
+        const request_username = "{{ request.user.username }}";
+        const url = `ws://127.0.0.1:8000/websocket/${person_username}/`;
+        const chat_websocket = new WebSocket(url);
+        const send_btn = document.getElementById("send-message-button");
+        const message_text = document.getElementById("the-message-to-send");
+        const messages_area = document.getElementById("messages-area");
+
+        function isRtl(text) {
+            const ltrChars = /[A-Za-z0-9]/;
+            const rtlChars = /[\u0600-\u06FF\u0750-\u077F]/;
+            const ltr = text.split('').filter(char => ltrChars.test(char)).length;
+            const rtl = text.split('').filter(char => rtlChars.test(char)).length;
+            return rtl > ltr;
+        }
+
+        function setTextDirection(textarea) {
+            if (isRtl(textarea.value)) {
+                textarea.style.direction = 'rtl';
+                textarea.placeholder = 'Type your message here...';
+            } else {
+                textarea.style.direction = 'ltr';
+                textarea.placeholder = 'Type your message here...';
+            }
+        }
+
+        message_text.addEventListener('input', function() {
+            setTextDirection(this);
+        });
+
+        function appendMessage(content, isFromMe, hasSeen) {
+            const now = new Date();
+            const formattedTime = now.toISOString().replace('T', ' ').substring(0, 19);
+            const messageBoxClass = isFromMe ? 'to' : 'from';
+            const readStatus = isFromMe ? `<span class="read-status ${hasSeen ? 'read' : 'unread'}">${hasSeen ? '✔✔' : '✔'}</span>` : '';
+
+            messages_area.insertAdjacentHTML(
+                "beforeend",
+                `<div class="message-box ${messageBoxClass}">
+                    <p class="message-content">${content}</p>
+                    <p class="message-time">${formattedTime} ${readStatus}</p>
+                </div>`
+            );
+
+            messages_area.scrollTop = messages_area.scrollHeight;
+        }
+
+        send_btn.addEventListener("click", function() {
+            const message = message_text.value.trim();
+            if (message) {
+                chat_websocket.send(JSON.stringify({ 'type': 'new_message', 'message': message }));
+                appendMessage(message, true, false);
+                message_text.value = "";
+                setTextDirection(message_text);
+            }
+        });
+
+        message_text.addEventListener("keydown", function(event) {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                send_btn.click();
+            }
+        });
+
+        chat_websocket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            if (data.type === 'new_message') {
+                appendMessage(data.message, false, data.has_seen_been);
+            }
+        };
+    </script>
+</body>
+</html>

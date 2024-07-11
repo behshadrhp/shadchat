@@ -1,0 +1,16 @@
+channels==3.0.4
+daphne
+django==4.0.0
+django-session-timeout
+django-debug-toolbar
+django-jazzmin
+django-axes
+dj-database-url
+psycopg2-binary 
+gunicorn
+Pillow
+pip-chill
+python-dotenv
+py3dns
+validate_email_address
+whitenoise

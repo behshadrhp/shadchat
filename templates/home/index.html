@@ -1,0 +1,13 @@
+{% extends "main/main.html" %}
+
+{% block title %}Home - ShadChat Messenger{% endblock title %}
+
+{% block content %}
+    <div class="text-center">
+        <h1 class="display-4">Welcome to ShadChat Messenger</h1>
+        <p class="lead">Connect with your friends and family instantly.</p>
+        <hr class="my-4">
+        <p>Get started by creating an account or logging in to continue.</p>
+        <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Get Started</a>
+    </div>
+{% endblock content %}
